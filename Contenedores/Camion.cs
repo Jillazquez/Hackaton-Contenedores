@@ -1,39 +1,42 @@
-﻿using System.Collections.Generic;
-
-namespace Contenedores
+﻿public class Camion
 {
-    internal class Camion
+    private int CapacidadMaxima { get; }
+    public int CargaActual { get; private set; }
+    public List<Contenedor> Contenedores { get; }
+    public List<Punto> Ruta { get; }
+    public double DistanciaRecorrida { get; private set; }
+    public Punto UbicacionActual;
+
+    public Camion(int capacidadMaxima, Punto centroOperaciones)
     {
-        public int CapacidadMaxima { get; private set; } // Capacidad total del camión
-        public int CapacidadActual { get; private set; } // Capacidad usada
-        public List<Contenedor> Contenedores { get; private set; } // Contenedores asignados
+        CapacidadMaxima = capacidadMaxima;
+        CargaActual = 0;
+        Contenedores = new List<Contenedor>();
+        Ruta = new List<Punto> { centroOperaciones };
+        DistanciaRecorrida = 0;
+        UbicacionActual = centroOperaciones;
+    }
 
-        public Camion(int capacidadMaxima)
-        {
-            CapacidadMaxima = capacidadMaxima;
-            CapacidadActual = 0;
-            Contenedores = new List<Contenedor>();
-        }
+    public bool AgregarContenedor(Contenedor contenedor)
+    {
+        int pesoContenedor = (contenedor.Nivel * contenedor.Capacidad) / 100;
+        if (CargaActual + pesoContenedor > CapacidadMaxima)
+            return false;
 
-        // Intenta añadir un contenedor al camión
-        public bool AgregarContenedor(Contenedor contenedor)
-        {
-            int pesoContenedor = (contenedor.Nivel * contenedor.Capacidad) / 100;
+        CargaActual += pesoContenedor;
+        Contenedores.Add(contenedor);
+        Ruta.Add(contenedor.Ubicacion);
 
-            // Verificar si el contenedor cabe en el camión
-            if (CapacidadActual + pesoContenedor <= CapacidadMaxima)
-            {
-                Contenedores.Add(contenedor);
-                CapacidadActual += pesoContenedor;
-                return true; // Contenedor añadido
-            }
+        DistanciaRecorrida += CalcularDistancia(UbicacionActual, contenedor.Ubicacion);
+        UbicacionActual = contenedor.Ubicacion;
 
-            return false; // No se pudo añadir
-        }
+        return true;
+    }
 
-        public override string ToString()
-        {
-            return $"Camión con {Contenedores.Count} contenedores, Carga Actual: {CapacidadActual}/{CapacidadMaxima}";
-        }
+    private double CalcularDistancia(Punto a, Punto b)
+    {
+        double dx = b.Lat - a.Lat;
+        double dy = b.Lon - a.Lon;
+        return Math.Sqrt(dx * dx + dy * dy);
     }
 }
