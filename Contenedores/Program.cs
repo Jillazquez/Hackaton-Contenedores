@@ -12,7 +12,7 @@ public class Program
         numContenedores = int.Parse(Console.ReadLine());
 
         //ArrayList para almacenar contenedores
-        ArrayList contenedores = new ArrayList();
+        List<Contenedor> contenedores = new List<Contenedor>();
 
         //Creamos un centro de operaciones que es donde los camiones saldran por defecto
         CentroOperaciones centroOperaciones = new CentroOperaciones(50,50);
@@ -27,16 +27,8 @@ public class Program
             contenedores.Add(c);
         }
 
-        foreach (Contenedor cont in contenedores)
-        {
-            Console.WriteLine(cont);
-        }
-
-        contenedores.Sort();
-
-        foreach (Contenedor cont in contenedores)
-        {
-            Console.WriteLine(cont);
-        }
+        // Calcular el peso total de los camiones
+        int pesoTotal = contenedores.Sum(camion => ((camion.Nivel * camion.Capacidad) / 100));
+        Console.WriteLine(pesoTotal);
     }
 }

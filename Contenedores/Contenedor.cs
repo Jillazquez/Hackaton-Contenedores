@@ -30,6 +30,12 @@ namespace Contenedores
             this.capacidad = capacidad;
         }
 
+        public int Id => _id;
+        public int Lat => lat;
+        public int Lon => lon;
+        public int Nivel => nivel;
+        public int Capacidad => capacidad;
+
         public override string ToString()
         {
             return $"Contenedor ID: {_id}, Latitud: {lat}, Longitud: {lon}, Nivel: {nivel}%, Capacidad: {capacidad} unidades";
