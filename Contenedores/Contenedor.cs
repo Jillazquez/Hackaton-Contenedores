@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Contenedores
 {
-    internal class Contenedor
+    internal class Contenedor : IComparable<Contenedor>
     {
         private int _id { get; set; }
         private int lat { get; set; }
@@ -14,7 +10,7 @@ namespace Contenedores
         private int nivel { get; set; }
         private int capacidad { get; set; }
 
-        //Constructor de los contenedores
+        // Constructor
         public Contenedor(int id, int lat, int lon, int nivel, int capacidad)
         {
             this._id = id;
@@ -31,21 +27,23 @@ namespace Contenedores
         }
 
         public int Id => _id;
-        public int Lat => lat;
-        public int Lon => lon;
-        public int Nivel => nivel;
+        public int Nivel => nivel; // Propiedad pública para acceder al nivel
         public int Capacidad => capacidad;
 
         public override string ToString()
         {
-            return $"Contenedor ID: {_id}, Latitud: {lat}, Longitud: {lon}, Nivel: {nivel}%, Capacidad: {capacidad} unidades";
+            return $"Contenedor ID: {_id}, Nivel: {nivel}%, Capacidad: {capacidad} unidades";
         }
 
-        // Implementar CompareTo para ordenar por Nivel
         public int CompareTo(Contenedor other)
         {
-            if (other == null) return 1; // Si el otro objeto es null, este es mayor
-            return nivel.CompareTo(other.nivel); // Comparar por Nivel
+            if (other == null) return 1;
+
+            int pesoActual = this.nivel * this.capacidad;
+            int pesoOtro = other.nivel * other.capacidad;
+
+            return pesoOtro.CompareTo(pesoActual);
         }
+
     }
 }
