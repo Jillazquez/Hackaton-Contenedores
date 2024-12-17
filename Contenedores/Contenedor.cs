@@ -30,5 +30,16 @@ namespace Contenedores
             this.capacidad = capacidad;
         }
 
+        public override string ToString()
+        {
+            return $"Contenedor ID: {_id}, Latitud: {lat}, Longitud: {lon}, Nivel: {nivel}%, Capacidad: {capacidad} unidades";
+        }
+
+        // Implementar CompareTo para ordenar por Nivel
+        public int CompareTo(Contenedor other)
+        {
+            if (other == null) return 1; // Si el otro objeto es null, este es mayor
+            return nivel.CompareTo(other.nivel); // Comparar por Nivel
+        }
     }
 }

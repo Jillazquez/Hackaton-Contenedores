@@ -13,17 +13,30 @@ public class Program
 
         //ArrayList para almacenar contenedores
         ArrayList contenedores = new ArrayList();
+
+        //Creamos un centro de operaciones que es donde los camiones saldran por defecto
+        CentroOperaciones centroOperaciones = new CentroOperaciones(50,50);
+
         for(int i = 0; i < numContenedores; i++)
         {
             int lat = random.Next(100)+1;
-            int lon = random.Next(100) + 1;
-            Contenedor c = new Contenedor(i, lat, lon,0,0);
+            int lon = random.Next(100)+1;
+            int nivel = random.Next(100)+1;
+            int capacidad = random.Next(50)+1;
+            Contenedor c = new Contenedor(i, lat, lon,nivel,capacidad);
             contenedores.Add(c);
         }
 
         foreach (Contenedor cont in contenedores)
         {
+            Console.WriteLine(cont);
+        }
 
+        contenedores.Sort();
+
+        foreach (Contenedor cont in contenedores)
+        {
+            Console.WriteLine(cont);
         }
     }
 }
