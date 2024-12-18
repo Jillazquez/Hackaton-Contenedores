@@ -1,6 +1,6 @@
 ﻿public class Camion
 {
-    private int CapacidadMaxima { get; }
+    public int CapacidadMaxima { get; }
     public int CargaActual { get; private set; }
     public List<Contenedor> Contenedores { get; }
     public List<Punto> Ruta { get; }
@@ -33,7 +33,7 @@
         return true;
     }
 
-    private double CalcularDistancia(Punto a, Punto b)
+    public double CalcularDistancia(Punto a, Punto b)
     {
         double dx = b.Lat - a.Lat;
         double dy = b.Lon - a.Lon;

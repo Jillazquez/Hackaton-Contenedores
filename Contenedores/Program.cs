@@ -83,9 +83,27 @@ namespace Contenedores
 
             // Give the container to the closest Truck
 
-            foreach()
+            foreach(var contenedor in contenedores)
             {
-                Console.WriteLine(camion);
+                // Find the closest truck
+                Camion closest = camiones.First<Camion>();
+                double distanciaCercana = closest.CalcularDistancia(closest.UbicacionActual,contenedor.Ubicacion);
+                Console.WriteLine("Empezamos con contenedor");
+                foreach(var camion in camiones)
+                {
+                    Console.WriteLine("Distancia con el contenedor "+camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual));
+                    if(distanciaCercana > camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual) && (camion.CapacidadMaxima-camion.CargaActual)> ((contenedor.Nivel * contenedor.Capacidad) / 100))
+                    {
+                        closest = camion;
+                        distanciaCercana = camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual);
+                    }
+                }
+                closest.AgregarContenedor(contenedor);
+            }
+
+            foreach (var camion in camiones)
+            {
+                Console.WriteLine($"Camión {camionIndex++}: Capacidad {camion.CargaActual}kg Posicion ({camion.UbicacionActual.Lat},{camion.UbicacionActual.Lon})");
             }
 
         }
