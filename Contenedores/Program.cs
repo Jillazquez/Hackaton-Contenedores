@@ -7,6 +7,7 @@ namespace Contenedores
     {
         static void Main(string[] args)
         {
+            //Objeto para crear aleatoriedad
             Random random = new Random();
             List<Contenedor> contenedores = new List<Contenedor>();
             List<Camion> camiones = new List<Camion>();
@@ -49,6 +50,7 @@ namespace Contenedores
             Console.WriteLine("\n--- Contenedores Generados ---");
             foreach (var contenedor in contenedores)
             {
+                // Calculamos el peso real con el nivel y la capacidad total
                 int peso = (contenedor.Nivel * contenedor.Capacidad) / 100;
                 Console.WriteLine($"ID: {contenedor.Id}, Posición: ({contenedor.Ubicacion.Lat}, {contenedor.Ubicacion.Lon}),Nivel:{contenedor.Nivel}, Capacidad: {contenedor.Capacidad}, Peso: {peso} kg");
             }
@@ -56,7 +58,7 @@ namespace Contenedores
             // Ordenar contenedores por peso
             contenedores.Sort((a, b) => (b.Nivel * b.Capacidad).CompareTo(a.Nivel * a.Capacidad));
 
-            // Crear camiones
+            // Crear minimo numero de camiones
             int capacidadCamion = 500;
             Punto centroOperaciones = new Punto(50, 50);
             int camionesRequeridos = (int)Math.Ceiling((double)contenedores.Count / (capacidadCamion / 100));
