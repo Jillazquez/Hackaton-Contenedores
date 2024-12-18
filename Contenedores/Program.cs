@@ -13,14 +13,13 @@ namespace Contenedores
             int numContenedores = 0;
             bool inputValido = false;
 
-            // Bucle para solicitar el número de contenedores, solo acepta valores válidos.
+            // Solicitar el número de contenedores
             do
             {
                 try
                 {
                     Console.WriteLine("¿Cuántos contenedores desea generar?");
                     numContenedores = int.Parse(Console.ReadLine());
-                    // Verificar que el número ingresado sea mayor o igual a 1
                     if (numContenedores >= 1)
                     {
                         inputValido = true;
@@ -34,78 +33,98 @@ namespace Contenedores
                 {
                     Console.WriteLine("Por favor introduce un número válido.");
                 }
-            } while (!inputValido); // Se repite hasta que se ingrese un número válido
+            } while (!inputValido);
 
-            // Generación de contenedores
+            // Generar contenedores
             for (int i = 0; i < numContenedores; i++)
             {
                 int lat = random.Next(100) + 1;
                 int lon = random.Next(100) + 1;
                 int nivel = random.Next(100) + 1;
                 int capacidad = random.Next(300) + 1;
-
                 contenedores.Add(new Contenedor(i + 1, lat, lon, nivel, capacidad));
             }
 
-            Console.WriteLine("\nContenedores generados:");
+            // Mostrar contenedores generados
+            Console.WriteLine("\n--- Contenedores Generados ---");
             foreach (var contenedor in contenedores)
             {
                 int peso = (contenedor.Nivel * contenedor.Capacidad) / 100;
-                Console.WriteLine($"ID: {contenedor.Id}, Posición: ({contenedor.Ubicacion.Lat}, {contenedor.Ubicacion.Lon}), Peso: {peso} kg");
+                Console.WriteLine($"ID: {contenedor.Id}, Posición: ({contenedor.Ubicacion.Lat}, {contenedor.Ubicacion.Lon}),Nivel:{contenedor.Nivel}, Capacidad: {contenedor.Capacidad}, Peso: {peso} kg");
             }
 
-            // Ordenar contenedores por prioridad (peso)
+            // Ordenar contenedores por peso
             contenedores.Sort((a, b) => (b.Nivel * b.Capacidad).CompareTo(a.Nivel * a.Capacidad));
 
+            // Crear camiones
             int capacidadCamion = 500;
             Punto centroOperaciones = new Punto(50, 50);
+            int camionesRequeridos = (int)Math.Ceiling((double)contenedores.Count / (capacidadCamion / 100));
 
-            // Generación de camiones vacíos
-            // Supongamos que necesitamos crear el número mínimo de camiones necesarios, basado en la cantidad de contenedores y la capacidad de los camiones
-            int camionesRequeridos = (int)Math.Ceiling((double)contenedores.Count / (double)(capacidadCamion / 100)); // Este cálculo puede ser mejorado si lo deseas
-
-            // Crear camiones vacíos
             for (int i = 0; i < camionesRequeridos; i++)
             {
-                camiones.Add(new Camion(capacidadCamion,centroOperaciones));
+                camiones.Add(new Camion(capacidadCamion, centroOperaciones));
             }
 
-            // Mostrar camiones generados
-            Console.WriteLine($"\nNúmero total de camiones creados: {camionesRequeridos}");
+            // Asignar contenedores a camiones
+            Console.WriteLine("\n--- Asignación de Contenedores ---");
+            foreach (var contenedor in contenedores)
+            {
+                Camion closest = null;
+                double distanciaCercana = double.MaxValue;
+
+                foreach (var camion in camiones)
+                {
+                    double distancia = camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual);
+                    if (distancia < distanciaCercana && (camion.CapacidadMaxima-camion.CargaActual) > (contenedor.Nivel * contenedor.Capacidad) / 100)
+                    {
+                        closest = camion;
+                        distanciaCercana = distancia;
+                    }
+                }
+
+                if (closest != null && closest.AgregarContenedor(contenedor))
+                {
+                    Console.WriteLine($"Contenedor {contenedor.Id} asignado al camión ubicado en ({closest.UbicacionActual.Lat}, {closest.UbicacionActual.Lon}).");
+                }
+                else
+                {
+                    Console.WriteLine($"Contenedor {contenedor.Id} no pudo ser asignado (sin capacidad disponible).");
+                }
+            }
+
+            // Devolver los camiones a su punto de origen
+            foreach (var camion in camiones)
+            {
+                camion.volverCentro(centroOperaciones);
+            }
+
+            // Mostrar información detallada de los camiones y sus rutas
+            Console.WriteLine("\n--- Detalles de los Camiones ---");
             int camionIndex = 1;
             foreach (var camion in camiones)
             {
-                Console.WriteLine($"Camión {camionIndex++}: Capacidad {camion.CargaActual}kg Posicion ({camion.UbicacionActual.Lat},{camion.UbicacionActual.Lon})");
-            }
-
-
-            //Here we have containers sorted and trucks created
-
-            // Give the container to the closest Truck
-
-            foreach(var contenedor in contenedores)
-            {
-                // Find the closest truck
-                Camion closest = camiones.First<Camion>();
-                double distanciaCercana = closest.CalcularDistancia(closest.UbicacionActual,contenedor.Ubicacion);
-                Console.WriteLine("Empezamos con contenedor");
-                foreach(var camion in camiones)
+                Console.WriteLine($"\nCamión {camionIndex}:");
+                Console.WriteLine($"  Capacidad utilizada: {camion.CargaActual}/{camion.CapacidadMaxima} kg");
+                Console.WriteLine($"  Distancia recorrida: {camion.DistanciaRecorrida:F2} unidades");
+                Console.WriteLine($"  Ruta seguida:");
+                Console.Write("    ");
+                foreach (var punto in camion.Ruta)
                 {
-                    Console.WriteLine("Distancia con el contenedor "+camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual));
-                    if(distanciaCercana > camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual) && (camion.CapacidadMaxima-camion.CargaActual)> ((contenedor.Nivel * contenedor.Capacidad) / 100))
-                    {
-                        closest = camion;
-                        distanciaCercana = camion.CalcularDistancia(contenedor.Ubicacion, camion.UbicacionActual);
-                    }
+                    Console.Write($"({punto.Lat}, {punto.Lon}) -> ");
                 }
-                closest.AgregarContenedor(contenedor);
+                Console.WriteLine($"Final ({camion.UbicacionActual.Lat}, {camion.UbicacionActual.Lon})");
+
+                Console.WriteLine($"  Contenedores transportados:");
+                foreach (var contenedor in camion.Contenedores)
+                {
+                    int peso = (contenedor.Nivel * contenedor.Capacidad) / 100;
+                    Console.WriteLine($"    Contenedor ID: {contenedor.Id}, Peso: {peso} kg, Ubicación: ({contenedor.Ubicacion.Lat}, {contenedor.Ubicacion.Lon})");
+                }
+                camionIndex++;
             }
 
-            foreach (var camion in camiones)
-            {
-                Console.WriteLine($"Camión {camionIndex++}: Capacidad {camion.CargaActual}kg Posicion ({camion.UbicacionActual.Lat},{camion.UbicacionActual.Lon})");
-            }
-
+            Console.WriteLine("\n--- Fin de la Ejecución ---");
         }
     }
 }

@@ -33,6 +33,14 @@
         return true;
     }
 
+    public void volverCentro(Punto puntoCentro)
+    {
+        Ruta.Add(puntoCentro);
+
+        DistanciaRecorrida += CalcularDistancia(UbicacionActual, puntoCentro);
+        UbicacionActual = puntoCentro;
+    }
+
     public double CalcularDistancia(Punto a, Punto b)
     {
         double dx = b.Lat - a.Lat;
