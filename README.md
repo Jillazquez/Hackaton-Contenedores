@@ -34,6 +34,65 @@ Ensure the following software is installed:
 - **.NET SDK 6.0 or later**  
   Download it from the official [.NET site](https://dotnet.microsoft.com/download).
 
+For Linux distributions
+<details>
+  <summary><b>Ubuntu, Debian</b></summary>
+  
+  1. Install prerequisites:
+   ```bash
+   sudo apt update
+   sudo apt install -y wget apt-transport-https software-properties-common
+   ```
+2. Add the Microsoft package signing key and repository:
+   ```bash
+   wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+   sudo dpkg -i packages-microsoft-prod.deb
+   ```
+3. Install the .NET 6 SDK:
+   ```bash
+   sudo apt update
+   sudo apt install -y dotnet-sdk-6.0
+   ```
+4. Verify the installation:
+   ```bash
+   dotnet --version
+   ```
+
+</details>
+
+<details>
+  <summary><b>Fedora</b></summary>
+  
+1. Add the Microsoft package repository:
+   ```bash
+   sudo dnf install -y https://packages.microsoft.com/config/fedora/$(rpm -E %fedora)/packages-microsoft-prod.rpm
+   ```
+2. Install the .NET 6 SDK:
+   ```bash
+   sudo dnf install -y dotnet-sdk-6.0
+   ```
+3. Verify the installation:
+   ```bash
+   dotnet --version
+   ```
+
+</details>
+
+<details>
+  <summary><b>Arch Linux</b></summary>
+  
+1. Use the AUR helper of your choice to install the .NET 6 SDK (e.g., `yay`):
+   ```bash
+   yay -S dotnet-sdk
+   ```
+2. Verify the installation:
+   ```bash
+   dotnet --version
+   ```
+
+</details>
+
+
 ---
 
 ## Building and Running
