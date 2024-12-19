@@ -17,6 +17,7 @@
         UbicacionActual = centroOperaciones;
     }
 
+    // Adds a container to the truck if the truck can add the weight
     public bool AgregarContenedor(Contenedor contenedor)
     {
         int pesoContenedor = (contenedor.Nivel * contenedor.Capacidad) / 100;
@@ -33,6 +34,7 @@
         return true;
     }
 
+    // Makes the truck go back to the origin
     public void volverCentro(Punto puntoCentro)
     {
         Ruta.Add(puntoCentro);
@@ -41,6 +43,7 @@
         UbicacionActual = puntoCentro;
     }
 
+    // Calculates the distance between 2 points
     public double CalcularDistancia(Punto a, Punto b)
     {
         double dx = b.Lat - a.Lat;

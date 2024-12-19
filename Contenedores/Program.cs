@@ -14,6 +14,12 @@ namespace Contenedores
             int numContenedores = 0;
             bool inputValido = false;
 
+            //Const 
+            const int LATMAX = 100;
+            const int LONMAX = 100;
+            const int NIVELMAX = 100;
+            const int CAPACIDADMAX = 300;
+
             // Solicitar el número de contenedores
             do
             {
@@ -39,10 +45,10 @@ namespace Contenedores
             // Generar contenedores
             for (int i = 0; i < numContenedores; i++)
             {
-                int lat = random.Next(100) + 1;
-                int lon = random.Next(100) + 1;
-                int nivel = random.Next(100) + 1;
-                int capacidad = random.Next(300) + 1;
+                int lat = random.Next(LATMAX) + 1;
+                int lon = random.Next(LONMAX) + 1;
+                int nivel = random.Next(NIVELMAX) + 1;
+                int capacidad = random.Next(CAPACIDADMAX) + 1;
                 contenedores.Add(new Contenedor(i + 1, lat, lon, nivel, capacidad));
             }
 
